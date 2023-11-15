@@ -1,11 +1,7 @@
 from src.components.image_and_height_data_scrapping_1 import Image_and_Height_Data_Scrapping
 from src.components.facial_feature_extraction import Facial_Feature_Extraction_From_Images
 
-initialize_scrapping = Image_and_Height_Data_Scrapping()
-pg_links_list = initialize_scrapping.get_urls("http://xn-----6kcczalffeh6afgdgdi2apgjghic4org.xn--p1ai/")
-img_name_and_height_dict = initialize_scrapping.get_image_and_height_from_urls(pg_links_list)
-scrapped_images_path,img_name_and_height_dataframe_path = initialize_scrapping.get_imgname_and_height_dataframe(img_name_and_height_dict)
-
+scrapped_images_path = "C:\\Users\\HP\\Desktop\\PW_Projects\\Body_Mass_Index_from_Face_Images\\images_data"
 feature_exctractor = Facial_Feature_Extraction_From_Images()
 img_name_list = feature_exctractor.load_images_in_directory(scrapped_images_path)
 image_name_and_land_marks = feature_exctractor.get_facial_landmarks(img_name_list,scrapped_images_path)

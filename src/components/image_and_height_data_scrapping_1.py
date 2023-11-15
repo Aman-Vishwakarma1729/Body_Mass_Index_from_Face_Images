@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Image_and_Height_Data_Scrapping_Config:
+    scrapped_images_path = os.path.join(os.getcwd(),'images_data')
     scrapped_height_data_path = os.path.join('artifacts','img_name_and_height.csv')
 
 class Image_and_Height_Data_Scrapping:
@@ -117,6 +118,6 @@ class Image_and_Height_Data_Scrapping:
             logging.info("Error occured while creating dataframe")
             raise CustomException(e,sys)
      
-        return self.scrapping_config.scrapped_height_data_path
+        return self.scrapping_config.scrapped_images_path,self.scrapping_config.scrapped_height_data_path
     
 
