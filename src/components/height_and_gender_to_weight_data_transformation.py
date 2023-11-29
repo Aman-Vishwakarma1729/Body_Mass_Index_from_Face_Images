@@ -93,7 +93,9 @@ class HandG_to_W_DataTransformation:
     def initiate_data_transformation_hgw_data_and_get_transformer_objects(self,train_path,test_path):
         try:
             train_df = pd.read_csv(train_path)
+            train_df = train_df.drop(columns="Unnamed: 0")
             test_df = pd.read_csv(test_path)
+            test_df = test_df.drop(columns="Unnamed: 0")
             logging.info('Sucessfully read the training and testing data for weight prediction from height and gender')
             logging.info(f'Train Dataframe Head : \n{train_df.head()}')
             logging.info(f'Test Dataframe Head  : \n{test_df.head()}')
