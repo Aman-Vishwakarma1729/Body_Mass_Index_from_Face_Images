@@ -73,3 +73,8 @@ class Facial_Images_to_Gender_Prediction:
             raise CustomException(e,sys)
 
         return self.gender_predictor_config.predicted_gender_data
+    
+
+
+
+     
