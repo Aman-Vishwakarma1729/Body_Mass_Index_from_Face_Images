@@ -12,6 +12,7 @@ print(scaler_obj_path)
 hwg_model_trainer = HWG_ModelTrainer()
 hwg_model_trainer.initate_hwg_model_training(hgw_train_array,hgw_test_array)
 
+print("Done")
 
 
     

@@ -9,17 +9,18 @@ from urllib.request import urlretrieve
 from src.logger import logging
 from src.exception import CustomException
 from dataclasses import dataclass
+import cv2
 
 
 @dataclass
 class Image_and_Height_Data_Scrapping_Config:
-    scrapped_images_path = os.path.join(os.getcwd(),'images_data')
+    scrapped_images_path = os.path.join(os.getcwd(),'final_images_data')
     scrapped_height_data_path = os.path.join('artifacts','img_name_and_height.csv')
 
 class Image_and_Height_Data_Scrapping:
     def __init__(self):
         self.scrapping_config = Image_and_Height_Data_Scrapping_Config()
-    
+        
     def get_urls(self,url):
         logging.info("Image and height data scrapping is initiated")
         logging.info("stage-1: Scrapping links for each image on each page")
@@ -46,19 +47,52 @@ class Image_and_Height_Data_Scrapping:
                         link = pg_link.get('href')
                         link = urljoin(url,link)
                         image_page_link.append(link)
-                logging.info(f"Successfully retrived links for all images on page {i}")
-                
+                logging.info(f"Successfully retrived links for all images on page {i}")               
             except Exception as e:
                 logging.info(f'There is problem in getting image page link for {url} of page {i}')
-                raise CustomException(e,sys)
-        
+                raise CustomException(e,sys)       
         logging.info(f"Here is the link of all the images\n{image_page_link}\n**There are {len(image_page_link)}** images")
         return image_page_link
+    
+    def create_req_folders(self,):
+        try:
+            logging.info("Created a folder named 'Images_data' and 'final_image_data'")
+            images_data_folder = os.path.join(os.getcwd(), "images_data")
+            if not os.path.exists(images_data_folder):
+               os.mkdir(images_data_folder)
+            final_images_data_folder = os.path.join(os.getcwd(), "final_images_data")
+            if not os.path.exists(final_images_data_folder):
+               os.mkdir(final_images_data_folder)
+            artifacts_folder = os.path.join(os.getcwd(), "artifacts")
+            if not os.path.exists(artifacts_folder):
+               os.mkdir(artifacts_folder)
+        except Exception as e:
+                logging.info(f'Exception occured while creating an required folders')
+                raise CustomException(e,sys)
+    
+
+    def locate_and_crop_face(self,image_path,output_path):
+        try:
+            logging.info(f"Working on image {image_path} : locating and croping face")
+            image = cv2.imread(image_path)
+            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+            gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
+            if len(faces) > 0:
+                x, y, w, h = faces[0]
+                cropped_face = image[y:y+h, x:x+w]
+                cv2.imwrite(output_path, cropped_face)
+
+                logging.info(f"Face located and cropped. Saved to: {output_path}")
+            else:
+                logging.info("No face detected in the image.")
+        except Exception as e:
+                logging.info(f'Error occur while locating and croping the face')
+                raise CustomException(e,sys) 
     
     def get_image_and_height_from_urls(self,image_page_link_list):
         logging.info(f"stage-2: Scrapping image and respective height for each image")
         count = 0
-        os.makedirs("images_data", exist_ok=True)
         image_names_with_height = {}
         for img_links in image_page_link_list:
             count=count+1
@@ -86,9 +120,11 @@ class Image_and_Height_Data_Scrapping:
                             img_url = urljoin("http://xn-----6kcczalffeh6afgdgdi2apgjghic4org.xn--p1ai",img_url)
                             img_name = os.path.basename(img_url)
                             img_path = os.path.join("images_data", img_name)
+                            output_path = os.path.join("final_images_data", img_name)
                             try:
                                 urlretrieve(img_url, img_path)
                                 logging.info(f"Downloaded: {img_url}")
+                                self.locate_and_crop_face(self,img_path,output_path)
                                 image_names_with_height[img_name] = height
                                 logging.info(f"{img_name}:{height}")
                             except Exception as e:
@@ -120,4 +156,15 @@ class Image_and_Height_Data_Scrapping:
      
         return self.scrapping_config.scrapped_images_path,self.scrapping_config.scrapped_height_data_path
     
-
+    def remove_folder_images_data(self,):
+        try:
+            logging.info("Removing the 'Images_data' folder as we have croped images in 'final_images_data' folder which will bw used for futher task")
+            directory_to_remove = "images_data"
+            if os.path.exists(directory_to_remove):
+               os.rmdir(directory_to_remove)
+               logging.info(f"The directory '{directory_to_remove}' has been removed.")
+            else:
+               logging.info(f"The directory '{directory_to_remove}' does not exist.")
+        except Exception as e:
+            logging.info("Error occured while removing 'images_data' folder")
+            raise CustomException(e,sys)

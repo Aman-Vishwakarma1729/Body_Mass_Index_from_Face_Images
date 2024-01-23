@@ -25,7 +25,7 @@ class BMI_Prediction_Pipeline:
             logging.info("Exception occured in getting input image for prediction")
             raise CustomException(e,sys)
         return directory_path
-
+    
 
     def get_gender(self,image_name_gender):
         try:
@@ -178,4 +178,15 @@ class BMI_Prediction_Pipeline:
 
         except Exception as e:
             logging.info("Exception occured in prediction")
+            raise CustomException(e,sys)
+    
+
+    def clear_input_image(self,directory_path):
+        try:
+            for filename in os.listdir(directory_path):
+                image_path = os.path.join(directory_path,filename)
+                os.remove(image_path)
+                logging.info("The input image taken for prediction has been removed from folder")
+        except Exception as e:
+            logging.info("There is an error in removing input image from folder")
             raise CustomException(e,sys)
