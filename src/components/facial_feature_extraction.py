@@ -12,8 +12,8 @@ import json
 @dataclass
 class Facial_Feature_Extraction_From_Images_Config:
     extracted_facial_features = os.path.join('artifacts','image_facial_features.csv')
-
-    s Facial_Feature_Extraction_From_Images:
+    
+class Facial_Feature_Extraction_From_Images:
     def __init__(self):
         self.feature_extrator_config = Facial_Feature_Extraction_From_Images_Config()
 

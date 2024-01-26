@@ -37,7 +37,7 @@ class Facial_Images_to_Gender_Prediction:
                         max_gender = max(gender, key=lambda k: gender[k])
                         logging.info(f'The gender with the maximum count for {filename} is: {max_gender}')
                         image_name_gender[filename] = max_gender
-            logging.info(f"Finally we have gender for all images with their names:\n{image_name_gender}")
+            logging.info(f"Finally we have gender for all images with their names:\n{image_name_gender},{type(image_name_gender)}")
         except Exception as e:
             logging.info("There is error in predicting gender")
             raise CustomException(e,sys)

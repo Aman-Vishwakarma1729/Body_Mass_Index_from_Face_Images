@@ -11,21 +11,99 @@ import pandas as pd
 import cv2
 import mediapipe as mp
 from deepface import DeepFace
+import shutil
+import time
 
 @dataclass
 class BMI_Prediction_Pipeline:
     def __init__(self):
         pass
+
+    def create_required_folders(self,):
+        try:
+            logging.info("Created a folder named 'input_image_for_prediction' and 'croped_image_for_prediction'")
+            input_image_for_prediction_folder = os.path.join(os.getcwd(), "input_image_for_prediction")
+            if not os.path.exists(input_image_for_prediction_folder):
+               os.mkdir(input_image_for_prediction_folder)
+            croped_image_for_prediction_folder = os.path.join(os.getcwd(), "croped_image_for_prediction")
+            if not os.path.exists(croped_image_for_prediction_folder):
+               os.mkdir(croped_image_for_prediction_folder)
+        except Exception as e:
+                logging.info(f'Exception occured while creating an required folders')
+                raise CustomException(e,sys)
     
     def get_directory_path(self,):
         try:
-            directory_path = os.path.join(os.getcwd(),"input_images")
+            directory_path = os.path.join(os.getcwd(),"input_image_for_prediction")
             logging.info(f"Got acces to the directory that has input image for bmi prediction:\n{directory_path}")   
         except Exception as e:
             logging.info("Exception occured in getting input image for prediction")
             raise CustomException(e,sys)
         return directory_path
     
+    def capture_with_timer_and_save(self,directory_path):
+        try:
+            logging.info("Capturing image")
+            cap = cv2.VideoCapture(0)
+            cap.set(3, 1021) 
+            cap.set(4, 1021) 
+            for i in range(5, 0, -1):
+                print(f"Capturing in {i} seconds...")
+                time.sleep(1)
+            ret, frame = cap.read()
+            cap.release()
+
+            if ret:
+                timestamp = time.strftime("%Y%m%d%H%M%S")
+                filename = f"captured_image_{timestamp}.png"
+                file_path = os.path.join(directory_path, filename)
+                cv2.imwrite(file_path, frame)
+                logging.info(f"Image saved as {file_path}")
+            else:
+                logging.info("Failed to capture an image.")
+        except Exception as e:
+            logging.info("Capturing image for BMI prediction")
+            raise CustomException(e,sys) 
+
+    
+    def locate_and_crop_face(self,image_path,output_path):
+        try:
+            logging.info(f"Working on image {image_path} : locating and croping face")
+            image = cv2.imread(image_path)
+            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+            gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
+            if len(faces) > 0:
+                x, y, w, h = faces[0]
+                new_w = int(w * 1.2)
+                new_h = int(h * 1.2)
+                x -= int((new_w - w) / 2)
+                y -= int((new_h - h) / 2)
+                cropped_face = image[y:y+new_h, x:x+new_w]
+                cv2.imwrite(output_path, cropped_face)
+
+                logging.info(f"Face located and cropped. Saved to: {output_path}")
+            else:
+                logging.info("No face detected in the image.")
+        except Exception as e:
+                logging.info(f'Error occur while locating and croping the face')
+                raise CustomException(e,sys) 
+    
+    def crop(self,input_image_for_prediction_folder_path):
+        count = 0
+        for filename in os.listdir(input_image_for_prediction_folder_path):
+            count = count + 1
+            try:
+                logging.info(f"gender cropping started for {filename}")
+                logging.info(f"We are on {count} image")
+                if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.jpeg'):
+                    image_path = os.path.join(input_image_for_prediction_folder_path, filename)
+                    output_path = os.path.join(os.path.join(os.getcwd(),"croped_image_for_prediction"),filename)
+                    croped_image_for_prediction_directory_path = os.path.join(os.getcwd(),"croped_image_for_prediction")
+                    self.locate_and_crop_face(image_path,output_path)
+            except Exception as e:
+                   logging.info(f'Error occur while locating and croping the face:{filename}')
+        return croped_image_for_prediction_directory_path
 
     def get_gender(self,image_name_gender):
         try:
@@ -179,7 +257,19 @@ class BMI_Prediction_Pipeline:
         except Exception as e:
             logging.info("Exception occured in prediction")
             raise CustomException(e,sys)
-    
+        
+    def remove_folder_images_data(self,):
+        try:
+            logging.info("Removing the 'input_image_for_prediction' folder as we have croped images in 'final_images_data' folder which will bw used for futher task")
+            directory_to_remove = "input_image_for_prediction"
+            if os.path.exists(directory_to_remove):
+               shutil.rmtree(directory_to_remove)
+               logging.info(f"The directory '{directory_to_remove}' has been removed.")
+            else:
+               logging.info(f"The directory '{directory_to_remove}' does not exist.")
+        except Exception as e:
+            logging.info("Error occured while removing 'images_data' folder")
+            raise CustomException(e,sys)
 
     def clear_input_image(self,directory_path):
         try:

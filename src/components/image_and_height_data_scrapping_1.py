@@ -1,6 +1,7 @@
 
 import os
 import sys
+import shutil
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -14,7 +15,8 @@ import cv2
 
 @dataclass
 class Image_and_Height_Data_Scrapping_Config:
-    scrapped_images_path = os.path.join(os.getcwd(),'final_images_data')
+    scrapped_images_path = os.path.join(os.getcwd(),'images_data')
+    croped_images_path = os.path.join(os.getcwd(),'final_images_data')
     scrapped_height_data_path = os.path.join('artifacts','img_name_and_height.csv')
 
 class Image_and_Height_Data_Scrapping:
@@ -80,9 +82,12 @@ class Image_and_Height_Data_Scrapping:
             faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
             if len(faces) > 0:
                 x, y, w, h = faces[0]
-                cropped_face = image[y:y+h, x:x+w]
+                new_w = int(w * 1.2)
+                new_h = int(h * 1.2)
+                x -= int((new_w - w) / 2)
+                y -= int((new_h - h) / 2)
+                cropped_face = image[y:y+new_h, x:x+new_w]
                 cv2.imwrite(output_path, cropped_face)
-
                 logging.info(f"Face located and cropped. Saved to: {output_path}")
             else:
                 logging.info("No face detected in the image.")
@@ -120,22 +125,24 @@ class Image_and_Height_Data_Scrapping:
                             img_url = urljoin("http://xn-----6kcczalffeh6afgdgdi2apgjghic4org.xn--p1ai",img_url)
                             img_name = os.path.basename(img_url)
                             img_path = os.path.join("images_data", img_name)
-                            output_path = os.path.join("final_images_data", img_name)
                             try:
                                 urlretrieve(img_url, img_path)
                                 logging.info(f"Downloaded: {img_url}")
-                                self.locate_and_crop_face(self,img_path,output_path)
                                 image_names_with_height[img_name] = height
                                 logging.info(f"{img_name}:{height}")
                             except Exception as e:
                                 logging.info(f"Failed to download: {img_url}")
                                 logging.info(f"Error: {e}")
                                 raise CustomException(e,sys)
+                           
+
             except Exception as e:
                 logging.info("There is problem in getting imag_tags and text")
                 raise CustomException(e,sys)
         return image_names_with_height
     
+    
+
     def get_imgname_and_height_dataframe(self,image_names_with_height):
         logging.info("stage-3: Finally getting dataframe")
         try:
@@ -156,12 +163,52 @@ class Image_and_Height_Data_Scrapping:
      
         return self.scrapping_config.scrapped_images_path,self.scrapping_config.scrapped_height_data_path
     
+    
+    def locate_and_crop_face(self,image_path,output_path):
+        try:
+            logging.info(f"Working on image {image_path} : locating and croping face")
+            image = cv2.imread(image_path)
+            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+            gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
+            if len(faces) > 0:
+                x, y, w, h = faces[0]
+                new_w = int(w * 1.2)
+                new_h = int(h * 1.2)
+                x -= int((new_w - w) / 2)
+                y -= int((new_h - h) / 2)
+                cropped_face = image[y:y+new_h, x:x+new_w]
+                cv2.imwrite(output_path, cropped_face)
+                logging.info(f"Face located and cropped. Saved to: {output_path}")
+            else:
+                logging.info("No face detected in the image.")
+        except Exception as e:
+                logging.info(f'Error occur while locating and croping the face')
+                raise CustomException(e,sys)
+    
+    def crop(self,scrapped_image_folder_path):
+        count = 0
+        for filename in os.listdir(scrapped_image_folder_path):
+            count = count + 1
+            try:
+                logging.info(f"gender cropping started for {filename}")
+                logging.info(f"We are on {count} image")
+                if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.jpeg'):
+                    image_path = os.path.join(scrapped_image_folder_path, filename)
+                    output_path = os.path.join(os.path.join(os.getcwd(),"final_images_data"),filename)
+                    self.locate_and_crop_face(image_path,output_path)
+            except Exception as e:
+                   logging.info(f'Error occur while locating and croping the face:{filename}')
+
+
+        return self.scrapping_config.croped_images_path
+    
     def remove_folder_images_data(self,):
         try:
             logging.info("Removing the 'Images_data' folder as we have croped images in 'final_images_data' folder which will bw used for futher task")
             directory_to_remove = "images_data"
             if os.path.exists(directory_to_remove):
-               os.rmdir(directory_to_remove)
+               shutil.rmtree(directory_to_remove)
                logging.info(f"The directory '{directory_to_remove}' has been removed.")
             else:
                logging.info(f"The directory '{directory_to_remove}' does not exist.")

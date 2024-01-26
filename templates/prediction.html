@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <form  action="{{ url_for('get_image') }}" method="POST" enctype="multipart/form-data">
+        <div class="header">
+            <center><h1>Body Mass Index (BMI) prediction using facial images</h1></center>
+            <center><a href="{{ url_for('index_page') }}">Home </a> &nbsp; &nbsp; &nbsp; <a href="{{ url_for('about_page') }}">About</a></center>
+        </div>
+
+        <div id = "predict-button">
+            <button type="submit"  class="predbtn" name="prediction" id="predcitBtn" value = "predict">Predict BMI</button>
+        </div>
+    </form>
+</body>
+</html>
