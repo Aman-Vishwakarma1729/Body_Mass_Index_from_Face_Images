@@ -8,15 +8,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <form  action="{{ url_for('get_image') }}" method="POST" enctype="multipart/form-data">
-        <div class="header">
-            <center><h1>Body Mass Index (BMI) prediction using facial images</h1></center>
-            <center><a href="{{ url_for('index_page') }}">Home </a> &nbsp; &nbsp; &nbsp; <a href="{{ url_for('about_page') }}">About</a></center>
-        </div>
-
-        <div id = "predict-button">
-            <button type="submit"  class="predbtn" name="prediction" id="predcitBtn" value = "predict">Predict BMI</button>
-        </div>
+     <div class="header">
+          <center><h1>Body Mass Index (BMI) prediction using facial images</h1></center>
+          <center><a href="{{ url_for('index_page') }}">Home </a> &nbsp; &nbsp; &nbsp; <a href="{{ url_for('about_page') }}">About</a></center>
+     </div>
+     <div class = "captured_image">
+        <center>
+            <img src="{{ url_for('serve_image', filename=image_path) }}" alt="Captured Image" width="380" height="401">
+        </center>
+     </div>
+     <form action="{{ url_for('result') }}" method="POST" enctype="multipart/form-data" >
+        <input type="hidden" name="image_path" value="{{ image_path }}">
+            <div id = "predict-button">
+                <button type="submit"  class="predbtn" name="prediction" id="predcitBtn" value = "predict">Predict BMI</button>
+            </div>
     </form>
+    {% if bmi_value %}
+        <div id="bmi-container">
+            <p id="bmi-value">Predicted BMI Value: {{ bmi_value }}</p>
+        </div>
+    {% endif %} 
 </body>
 </html>
