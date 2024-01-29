@@ -21,15 +21,19 @@ class BMI_Prediction_Pipeline:
 
     def create_required_folders(self,):
         try:
-            logging.info("Created a folder named 'input_image_for_prediction' and 'croped_image_for_prediction'")
+            logging.info("Creating a folder named 'input_image_for_prediction' and 'croped_image_for_prediction'")
             input_image_for_prediction_folder = os.path.join(os.getcwd(), "input_image_for_prediction")
             if not os.path.exists(input_image_for_prediction_folder):
                os.mkdir(input_image_for_prediction_folder)
+               logging.info(f"Created folder: {input_image_for_prediction_folder}")
+
             croped_image_for_prediction_folder = os.path.join(os.getcwd(), "croped_image_for_prediction")
             if not os.path.exists(croped_image_for_prediction_folder):
                os.mkdir(croped_image_for_prediction_folder)
+               logging.info(f"Created folder : {croped_image_for_prediction_folder}")
+            logging.info("Creation of folders named 'input_image_for_prediction' and 'croped_image_for_prediction' competed ...!!!")
         except Exception as e:
-                logging.info(f'Exception occured while creating an required folders')
+                logging.info("Exception occured while creating 'input_image_for_prediction' or 'croped_image_for_prediction' folders")
                 raise CustomException(e,sys)
     
     def get_directory_path(self,):
@@ -73,6 +77,7 @@ class BMI_Prediction_Pipeline:
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
             gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
+            face_detected = False
             if len(faces) > 0:
                 x, y, w, h = faces[0]
                 new_w = int(w * 1.2)
@@ -81,29 +86,39 @@ class BMI_Prediction_Pipeline:
                 y -= int((new_h - h) / 2)
                 cropped_face = image[y:y+new_h, x:x+new_w]
                 cv2.imwrite(output_path, cropped_face)
-
+                face_detected = True
                 logging.info(f"Face located and cropped. Saved to: {output_path}")
             else:
+                face_detected = False
                 logging.info("No face detected in the image.")
+        
         except Exception as e:
                 logging.info(f'Error occur while locating and croping the face')
                 raise CustomException(e,sys) 
+        return face_detected
     
     def crop(self,input_image_for_prediction_folder_path):
         count = 0
         for filename in os.listdir(input_image_for_prediction_folder_path):
             count = count + 1
             try:
-                logging.info(f"gender cropping started for {filename}")
+                logging.info(f"Input image cropping started for {filename}")
                 logging.info(f"We are on {count} image")
                 if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.jpeg'):
                     image_path = os.path.join(input_image_for_prediction_folder_path, filename)
                     output_path = os.path.join(os.path.join(os.getcwd(),"croped_image_for_prediction"),filename)
                     croped_image_for_prediction_directory_path = os.path.join(os.getcwd(),"croped_image_for_prediction")
-                    self.locate_and_crop_face(image_path,output_path)
+                    
+                    
+                    face_detected = self.locate_and_crop_face(image_path, output_path)
+                    if face_detected:
+                       face_detected = True
+    
+
+
             except Exception as e:
                    logging.info(f'Error occur while locating and croping the face:{filename}')
-        return croped_image_for_prediction_directory_path
+        return face_detected,croped_image_for_prediction_directory_path
 
     def get_gender(self,image_name_gender):
         try:

@@ -134,4 +134,21 @@ input[type="file"][name="image_file"] {
   }
   
 
-  
+  .flash-messages {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f8d7da;  
+    color: #721c24; 
+    border: 1px solid #f5c6cb; 
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    width: 300px;  
+}
+
+.flash-messages p {
+    margin: 0;
+}
