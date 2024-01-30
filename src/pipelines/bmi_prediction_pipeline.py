@@ -106,10 +106,10 @@ class BMI_Prediction_Pipeline:
                 logging.info(f"We are on {count} image")
                 if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.jpeg'):
                     image_path = os.path.join(input_image_for_prediction_folder_path, filename)
+                    logging.info(f"The uploaded image will be saved at: {image_path}")
                     output_path = os.path.join(os.path.join(os.getcwd(),"croped_image_for_prediction"),filename)
+                    logging.info(f"The uploaded image will be transffered to : {output_path} after cropping")
                     croped_image_for_prediction_directory_path = os.path.join(os.getcwd(),"croped_image_for_prediction")
-                    
-                    
                     face_detected = self.locate_and_crop_face(image_path, output_path)
                     if face_detected:
                        face_detected = True

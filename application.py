@@ -6,6 +6,7 @@ import numpy as np
 import datetime
 import sys
 import time
+import shutil
 import mediapipe as mp
 from deepface import DeepFace
 from src.pipelines.bmi_prediction_pipeline import BMI_Prediction_Pipeline
@@ -72,10 +73,11 @@ def get_image_upload():
         logging.info("Uploading image for prediction")
         if request.form['upload_action'] == 'upload':
             logging.info(request.form)
+            BMI_Prediction_Pipeline().create_required_folders()
+            logging.info("The required folder has been created")
             uploaded_file = request.files['image_file']
             logging.info(uploaded_file)
             if uploaded_file.filename != '':
-                BMI_Prediction_Pipeline().create_required_folders()
                 logging.info("Required folder has been created")
                 img_folder = os.path.join(os.getcwd(),"input_image_for_prediction")
                 logging.info(f"Got access to folder to save the input image: {img_folder}")
@@ -88,6 +90,7 @@ def get_image_upload():
     except Exception as e:
         logging.info("An error occured while uploading image for prediction of BMI")
         raise CustomException(e,sys)
+
 
    
 @app.route('/serve_image/<filename>')
@@ -159,17 +162,32 @@ def result():
         flash("An error occurred during BMI prediction. Please try again.")
         return redirect(url_for('index_page'))
     
-@app.after_request
-def after_request(response):
+@app.route('/clear_folders', methods=['POST'])
+def clear_folders():
     try:
-        if hasattr(g, 'is_last_response') and g.is_last_response:
-            BMI_Prediction_Pipeline().remove_folder_images_data()
-            BMI_Prediction_Pipeline().clear_input_image(os.path.join(os.getcwd,"croped_image_for_prediction_directory_path"))
-            logging.info("Temporary folders and files deleted successfully.")
+        if request.form['clear_action'] == 'clear':
+            logging.info("Got request to clear the folder that contain input and cropped images")
+            remove_croped_image_for_prediction_folder_path = os.path.join(os.getcwd(),"croped_image_for_prediction")
+            remove_input_image_for_prediction_folder_path = os.path.join(os.getcwd(),"input_image_for_prediction")
+            if os.path.exists(remove_croped_image_for_prediction_folder_path):
+               shutil.rmtree(remove_croped_image_for_prediction_folder_path)
+               logging.info(f"The directory '{remove_croped_image_for_prediction_folder_path}' has been removed.")
+            else:
+                logging.info("The folder {remove_croped_image_for_prediction_folder_path} was already removed")
+
+            if os.path.exists(remove_input_image_for_prediction_folder_path):
+               shutil.rmtree(remove_input_image_for_prediction_folder_path)
+               logging.info(f"The directory '{remove_input_image_for_prediction_folder_path}' has been removed.")
+            else:
+                logging.info("The folder {remove_input_image_for_prediction_folder_path} was already removed")
+
+            return redirect(url_for('index_page'))
     except Exception as e:
-        logging.error("An error occurred during cleanup after request.")
-        raise CustomException(e, sys)
-    return response
+        logging.info("An error occurred while clearing folders.")
+        flash("An error occurred during clearing")
+        return redirect(url_for('index_page'))
+
+
 
 if __name__=="__main__":
     app.run(host='0.0.0.0')

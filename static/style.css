@@ -152,3 +152,31 @@ input[type="file"][name="image_file"] {
 .flash-messages p {
     margin: 0;
 }
+
+/* Add these styles at the end of your style.css file */
+
+#clear-button {
+    position: fixed;
+    bottom: 40px; /* Adjust the top distance as needed */
+    right: 200px; /* Adjust the right distance as needed */
+    text-align: right;
+}
+
+.clearbtn {
+    padding: 8px 16px;
+    background-color: #f44336; /* Red color, you can change it */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.clearbtn:hover {
+    background-color: #d32f2f; /* Darker red color on hover */
+}
+
+#clear-message {
+    margin-top: 5px;
+    color: #000000;
+    font-size: 14px;
+}

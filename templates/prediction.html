@@ -23,6 +23,15 @@
                 <button type="submit"  class="predbtn" name="prediction" id="predcitBtn" value = "predict">Predict BMI</button>
             </div>
     </form>
+    
+    <div id="clear-button">
+        <form action="{{ url_for('clear_folders') }}" method="POST">
+            <button type="submit" class="clearbtn" name="clear_action" id="clearBtn" value="clear">Clear</button>
+        </form>
+        <p id="clear-message">Clear before next prediction</p>
+    </div>
+    
+
     {% if bmi_value %}
         <div id="bmi-container">
             <p id="bmi-value">Predicted BMI: {{ bmi_value }}</p>
