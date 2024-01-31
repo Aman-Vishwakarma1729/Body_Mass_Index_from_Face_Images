@@ -21,6 +21,19 @@ app.secret_key = '1729@AmanV'
 def index_page():
     try:
        logging.info("Sucessfully made connection with index.html")
+       remove_croped_image_for_prediction_folder_path = os.path.join(os.getcwd(),"croped_image_for_prediction")
+       remove_input_image_for_prediction_folder_path = os.path.join(os.getcwd(),"input_image_for_prediction")
+       if os.path.exists(remove_croped_image_for_prediction_folder_path):
+            shutil.rmtree(remove_croped_image_for_prediction_folder_path)
+            logging.info(f"The directory '{remove_croped_image_for_prediction_folder_path}' has been removed.")
+       else:
+            logging.info("The folder {remove_croped_image_for_prediction_folder_path} was already removed")
+
+       if os.path.exists(remove_input_image_for_prediction_folder_path):
+            shutil.rmtree(remove_input_image_for_prediction_folder_path)
+            logging.info(f"The directory '{remove_input_image_for_prediction_folder_path}' has been removed.")
+       else:
+            logging.info("The folder {remove_input_image_for_prediction_folder_path} was already removed")
        return render_template('index.html')
     except Exception as e:
         logging.info("An error occured while accessing index.html")
