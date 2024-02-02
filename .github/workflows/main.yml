@@ -14,7 +14,7 @@ permissions:
 jobs:
   integration:
     name: Continous Integration
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: action/checkout@v3
