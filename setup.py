@@ -13,13 +13,13 @@ def get_requirements(file_path):
 
         return requirements
 
+if __name__=="__main__":
+    setup(
+        name='BMI_prediction_using_facial_images',
+        version='0.0.1',
+        author='Aman',
+        author_email='amansharma1729ds@gmail.com',
+        install_requires=get_requirements('requirements.txt'),
+        packages=find_packages()
 
-setup(
-    name='BMI_prediction_using_facial_images',
-    version='0.0.1',
-    author='Aman',
-    author_email='amansharma1729ds@gmail.com',
-    install_requires=get_requirements('requirements.txt'),
-    packages=find_packages()
-
-)
+    )
