@@ -1,6 +1,4 @@
 typing-extensions
-setuptools>=61
-setuptools-scm==8.0.4[toml]
 absl-py==2.0.0
 asttokens==2.4.1
 astunparse==1.6.3
