@@ -1,5 +1,6 @@
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y python3 python3-pip
+RUN apt-get install -y libgl1-mesa-glx
 RUN pip install --upgrade pip setuptools
 RUN apt-get update && apt-get install -y build-essential patchelf ninja-build
 WORKDIR /app
