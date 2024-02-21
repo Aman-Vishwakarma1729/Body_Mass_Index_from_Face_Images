@@ -60,36 +60,45 @@ We have used dataset that contain facial images of celebrities and their height 
 ## Project Workflow
 --------------
 1) The data that contains **facial images** of celeb's and thier **height** is scrapped using the scrapping technique and libraries like **BeautifulSoup** the code for scrapping **Images** and **Height** is at [image_and_height_data_scrapping_1.py](src/components/image_and_height_data_scrapping_1.py).
+
 2) Pandas **DataFrame** is created that contains **Image names** and respective **Height**. The same data is located at [img_name_and_height.csv](artifacts/img_name_and_height.csv).
+
 3) The image that are scrapped is **cropped** using pre-trained model **haarcascade_frontalface** that locate face and crop it.we cropped the images so that we have image of similar dimensions and we only want facial image so we cropped facial part and those images are saved at [final_images_data](final_images_data) with respective image name.
+   
 4) We used a predtrained model that predicts **Gender** using **Face Image** so that we get **Gender** of images that we scrapped  and we already have their **Height** the code for same is located at [Image_to_gender_prediction.py](src/components/Image_to_gender_prediction.py). The dataset than obtained consist **Image name**, **Height** and **Gender** and is saved at [img_name_height_gender.csv](artifacts/img_name_height_gender.csv).
+
 5) To get the **BODY MASS INDEX (BMI)** of or celeb's facial data we needed their **Weights** and we now already have their **Gender** and **Height** so we build a model that predict's the **Weight** using **Gender** and **Height** and for that we used this data [HWG_Data.csv](notebooks/Height_to_Weight_Data_and_Models/HWG_Data.csv). We have done some preprocessing on **HWG_Data.csv** data which can be seen at [Height_Weight_Data_Analysis.ipynb](notebooks/Height_to_Weight_Data_and_Models/Height_Weight_Data_Analysis.ipynb). And obtain the data that we needed to develop a model that can predict **Weight** using **Gender** and **Height** and that data is located at [HWG_Data_Updated.csv](notebooks/Height_to_Weight_Data_and_Models/HWG_Data_Updated.csv).
+ 
 6) We have done modular coding to get a model that can predict **Weight** from **Gender** and **Height**. We first did **data ingestion** to get **raw data** [hgw_raw.csv](artifacts/hgw_raw.csv), **train data** [hgw_train.csv](artifacts/hgw_train.csv), and **test data** [hgw_test.csv](artifacts/hgw_test.csv),and code for data ingestion is at [height_and_gender_to_weight_data_ingestion.py](src/components/height_and_gender_to_weight_data_ingestion.py). Once the data ingestion is completed we have done modular coding for automated data preprocessing where we have done **scalling** [hgw_scaler.pkl](artifacts/hgw_scaler.pkl) and **data encoding** [hgw_gender_encoder.pkl](artifacts/hgw_gender_encoder.pkl) and code for data transformation/preprocessing is at [height_and_gender_to_weight_data_transformation.py](src/components/height_and_gender_to_weight_data_transformation.py). Once data transformation is done we have automated the process of model training and saving a model that predict **Weights** from **Gender** and **Height** with best accuracy the codel for same is at [height_and_gender_to_weight_model_trainer.py](src/components/height_and_gender_to_weight_model_trainer.py), and we got the height predictor model [hg_to_w_predictor_model.pkl](artifacts/hg_to_w_predictor_model.pkl). Than we have used this model to predict the **Weight** of the celeb's data where we already had there **Gender** and **Height** and the code for same is at [getting_final_dataset.py](src/components/getting_final_dataset.py). So we got new dataset with **Image name**, **Gender**, **Height** and **Weight** and than we using simple **BMI** formula which is **(Weight in KG)/(Height in meter)^2** and got final data set which we used further.
+
 7) To extract facial features from celeb's face images we used **MEDIAPIPE** which uses **Deep Computer Vision** to locate various **land marks** on face and each land mark has **Unique ID** and **Co-ordinate**. Using this **land marks** and **Co-ordinates** we extracted **19 facial features** from each image the code for same is [facial_feature_extraction.py](src/components/facial_feature_extraction.py). And those facial features are as follows:
    
-| Acronym | Description                         |
-|---------|-------------------------------------|
-| FL      | Face Length                         |
-| FRHL    | Forehead Length                     |
-| ETL     | Ear Tip Length                      |
-| MEL     | Mid Ear Length                      |
-| BEL     | Bottom Ear Length                   |
-| LIPL_L  | Lip Line Length                     |
-| JL      | Jaw Length                          |
-| FLL     | Face Length Left                    |
-| FLR     | Face Length Right                   |
-| DFL_L_R | Diagonal Face Length Left to Right  |
-| DFL_R_L | Diagonal Face Length Right to Left  |
-| NWL     | Nose Width Length                   |
-| L_L     | Lip Length                          |
-| L_W     | Lip Width                           |
-| LEL     | Left Eye Length                     |
-| LEW     | Left Eye Width                      |
-| REL     | Right Eye Length                    |
-| REW     | Right Eye Width                     |
-| FA      | Facial Area                         |
+      | Acronym | Description                         |      
+      |---------|-------------------------------------|
+      | FL      | Face Length                         |
+      | FRHL    | Forehead Length                     |
+      | ETL     | Ear Tip Length                      |
+      | MEL     | Mid Ear Length                      |
+      | BEL     | Bottom Ear Length                   |
+      | LIPL_L  | Lip Line Length                     |
+      | JL      | Jaw Length                          |
+      | FLL     | Face Length Left                    |
+      | FLR     | Face Length Right                   |
+      | DFL_L_R | Diagonal Face Length Left to Right  |
+      | DFL_R_L | Diagonal Face Length Right to Left  |
+      | NWL     | Nose Width Length                   |
+      | L_L     | Lip Length                          |
+      | L_W     | Lip Width                           |
+      | LEL     | Left Eye Length                     |
+      | LEW     | Left Eye Width                      |
+      | REL     | Right Eye Length                    |
+      | REW     | Right Eye Width                     |
+      | FA      | Facial Area                         |
 
-<div align="center">
+<div>
 <img src="https://github.com/Aman-Vishwakarma1729/Body_Mass_Index_from_Face_Images/assets/110922641/1d282122-a6bb-4ddc-927c-9a1065a54b5a" alt="Refference Image" width="500"/>
 </div>
 
+Once all this features are extracted for all the celeb's images it saved in pandas dataframe and then we **joined** it with our previous data set that we obtained step 6. And finally we have data dataset with all this features and coressponding **BMI** with **Gender** and dataset are joined on the basis of **Image name**. The final data set looks like [final_bmi_dataset.csv](artifacts/final_bmi_dataset.csv).
+
+8) 
