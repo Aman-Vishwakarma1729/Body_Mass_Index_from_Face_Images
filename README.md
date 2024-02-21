@@ -54,4 +54,4 @@ Obesity is a major global health concern, affecting over **41 million children u
 
 ## About Data
 --------------
-We have used dataset that contain facial images of celebrities and their height which we have scrapped from "http://xn-----6kcczalffeh6afgdgdi2apgjghic4org.xn--p1ai/"
+We have used dataset that contain facial images of celebrities and their height which we have scrapped from [Celeb's facial image data](http://xn-----6kcczalffeh6afgdgdi2apgjghic4org.xn--p1ai/) and also we have used another data set to build a model that predicts **WEIGHTS** from **HEIGHT** as on above given data source does not have weights data, and that data is present at [HWG_Data.csv](notebooks/Height_to_Weight_Data_and_Models/HWG_Data.csv).
