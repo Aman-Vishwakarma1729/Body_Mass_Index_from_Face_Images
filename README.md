@@ -10,6 +10,10 @@
 3. [About Data](#about-data)
 4. [Project Workflow](#project-workflow)
 5. [New Data Prediction Workflow](#new-data-prediction-workflow)
+6. [About User Interface](#about-user-interface)
+7. [Steps To Setup And Use This Project](#steps-to-setup-and-use-this-project)
+9. [Database](#dtabase)
+10. [About Deployment](#about-deployment)
 
 ## Introduction
 --------------
@@ -135,3 +139,35 @@ Once all this features are extracted for all the celeb's images it saved in pand
 8) Than we use **Scalling modle** that was saved as **.pkl** file in artifact folder to scale obtain data.
 
 9) On this new scaled data on input image the **prediction model** is used to predict BMI.
+
+## About User Interface
+--------------
+
+1) We have created **UI** using **HTML** and **CSS**. This can be found at [templates](templates), and [static](static).
+
+3) We use **FLASK** web framework to build web applications. That has infused prediction pipeline in it. [application.py](application.py).
+
+## Steps To Setup And Use This Project
+--------------
+
+There are two ways to setup and use this project.
+1) Using GIT CLONE:
+   - Open the terminal and type: https://github.com/Aman-Vishwakarma1729/Body_Mass_Index_from_Face_Images .
+   - Type **pip install requirements.txt** .
+   - Type **python application.py** .
+   - Go to the recenly generate log file and follow the link in that log file.
+
+2) Using Docker Image.
+    - We have created a docker image of this project which is uploaded on docker hub.
+
+## Database
+--------------
+The final BMI dataset is uploaded on **MongoDB**
+
+## About Deployment
+--------------
+1) We use **Git Action** to create **CI-CD** pipeline.
+
+2) We than used **AMAZON ECR** to store, manage, and deploy Docker container images.
+
+3) **AMAZON APP RUNNER** is used  to build, deploy the containerized applications.
