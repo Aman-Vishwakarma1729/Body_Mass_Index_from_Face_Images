@@ -102,3 +102,11 @@ We have used dataset that contain facial images of celebrities and their height 
 Once all this features are extracted for all the celeb's images it saved in pandas dataframe and then we **joined** it with our previous data set that we obtained **step 6**. And finally we have data dataset with all this features and coressponding **BMI** with **Gender** and dataset are joined on the basis of **Image name**. The final data set looks like [final_bmi_dataset.csv](artifacts/final_bmi_dataset.csv).
 
 8) Once we have the **final_bmi_dataset.csv** dataset we perform basic analysis and rough model building in the notebook at [BMI_Data_Analysis.ipynb](notebooks/BMI_Data_Analysis_and_Modelling/BMI_Data_Analysis.ipynb).
+
+9) We start with modular coding so that entire **training**, **testing**, **model evaluation** and **model selection** process can bee automated for **final_bmi_dataset.csv**.
+
+10)  We first start with **data ingestion** for **final_bmi_dataset.csv** here [bmi_data_ingestion.py](src/components/bmi_data_ingestion.py). And we obtained artifacts such as raw data [bmi_raw.csv](artifacts/bmi_raw.csv), train data [bmi_train.csv](artifacts/bmi_train.csv) and test data [bmi_test.csv](artifacts/bmi_test.csv).
+
+11)  After **data ingestion** we start with **data preprocessing/transformation**  at [bmi_data_transformation.py](src/components/bmi_data_transformation.py). Here we perform **data scaling** [bmi_scaler.pkl](artifacts/bmi_scaler.pkl). The module obtained is used futher while creating **prediction pipeline**.
+
+12)  
