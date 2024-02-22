@@ -9,6 +9,7 @@
 2. [Tools Used](#tools-used)
 3. [About Data](#about-data)
 4. [Project Workflow](#project-workflow)
+5. [New Data Prediction Workflow](#new-data-prediction-workflow)
 
 ## Introduction
 --------------
@@ -59,6 +60,8 @@ We have used dataset that contain facial images of celebrities and their height 
 
 ## Project Workflow
 --------------
+We have first created **CONDA** virtual environment.
+
 1) The data that contains **facial images** of celeb's and thier **height** is scrapped using the scrapping technique and libraries like **BeautifulSoup** the code for scrapping **Images** and **Height** is at [image_and_height_data_scrapping_1.py](src/components/image_and_height_data_scrapping_1.py).
 
 2) Pandas **DataFrame** is created that contains **Image names** and respective **Height**. The same data is located at [img_name_and_height.csv](artifacts/img_name_and_height.csv).
@@ -105,8 +108,30 @@ Once all this features are extracted for all the celeb's images it saved in pand
 
 9) We start with modular coding so that entire **training**, **testing**, **model evaluation** and **model selection** process can bee automated for **final_bmi_dataset.csv**.
 
-10)  We first start with **data ingestion** for **final_bmi_dataset.csv** here [bmi_data_ingestion.py](src/components/bmi_data_ingestion.py). And we obtained artifacts such as raw data [bmi_raw.csv](artifacts/bmi_raw.csv), train data [bmi_train.csv](artifacts/bmi_train.csv) and test data [bmi_test.csv](artifacts/bmi_test.csv).
+10) We first start with **data ingestion** for **final_bmi_dataset.csv** here [bmi_data_ingestion.py](src/components/bmi_data_ingestion.py). And we obtained artifacts such as raw data [bmi_raw.csv](artifacts/bmi_raw.csv), train data [bmi_train.csv](artifacts/bmi_train.csv) and test data [bmi_test.csv](artifacts/bmi_test.csv).
 
-11)  After **data ingestion** we start with **data preprocessing/transformation**  at [bmi_data_transformation.py](src/components/bmi_data_transformation.py). Here we perform **data scaling** [bmi_scaler.pkl](artifacts/bmi_scaler.pkl). The module obtained is used futher while creating **prediction pipeline**.
+11) After **data ingestion** we start with **data preprocessing/transformation**  at [bmi_data_transformation.py](src/components/bmi_data_transformation.py). Here we split data as **Independent/Input** data and **Dependent/Target** data which is **BMI** ,we perform **data scaling** [bmi_scaler.pkl](artifacts/bmi_scaler.pkl). The module obtained is used futher while creating **prediction pipeline**.
 
-12)  
+12) After **data transformation** we start with **model training** [bmi_prediction_model_trainer.py](src/components/bmi_prediction_model_trainer.py) from here we got model that can predict **BMI** using **Facial features** and **Gender** and model is saved as artifcat for its further use in prediction pipeline [bmi_predictor_model.pkl](artifacts/bmi_predictor_model.pkl).
+
+
+## New Data Prediction Workflow
+--------------
+
+1) Once we have all neccesary components we than go for **Prediction Pipeline** [bmi_prediction_pipeline.py](src/pipelines/bmi_prediction_pipeline.py).
+
+2) Here we first takes picture from uses camera using **cv2** an **python-openCV** package
+
+3) That image than is saved to directory.
+
+4) The image than is **cropped** to a dimension same as training data and using same pre-trained model.
+
+5) Once we get cropped image than **gender predictor** is used to get gender of input image (1 if male and 0 if female).
+
+6) Once we get gender, all 19 features are extracted using same technique as done for training data.
+
+7) All this data i.e. **facial features** and **Gender** is used to get panda dataframe.
+
+8) Than we use **Scalling modle** that was saved as **.pkl** file in artifact folder to scale obtain data.
+
+9) On this new scaled data on input image the **prediction model** is used to predict BMI.
