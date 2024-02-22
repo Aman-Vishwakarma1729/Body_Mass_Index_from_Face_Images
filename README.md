@@ -99,6 +99,6 @@ We have used dataset that contain facial images of celebrities and their height 
 <img src="https://github.com/Aman-Vishwakarma1729/Body_Mass_Index_from_Face_Images/assets/110922641/1d282122-a6bb-4ddc-927c-9a1065a54b5a" alt="Refference Image" width="500"/>
 </div>
 
-Once all this features are extracted for all the celeb's images it saved in pandas dataframe and then we **joined** it with our previous data set that we obtained step 6. And finally we have data dataset with all this features and coressponding **BMI** with **Gender** and dataset are joined on the basis of **Image name**. The final data set looks like [final_bmi_dataset.csv](artifacts/final_bmi_dataset.csv).
+Once all this features are extracted for all the celeb's images it saved in pandas dataframe and then we **joined** it with our previous data set that we obtained **step 6**. And finally we have data dataset with all this features and coressponding **BMI** with **Gender** and dataset are joined on the basis of **Image name**. The final data set looks like [final_bmi_dataset.csv](artifacts/final_bmi_dataset.csv).
 
-8) 
+8) Once we have the **final_bmi_dataset.csv** dataset we perform basic analysis and rough model building in the notebook at [BMI_Data_Analysis.ipynb](notebooks/BMI_Data_Analysis_and_Modelling/BMI_Data_Analysis.ipynb).
