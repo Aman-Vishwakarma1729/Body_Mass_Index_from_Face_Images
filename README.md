@@ -152,17 +152,51 @@ Once all this features are extracted for all the celeb's images it saved in pand
 
 There are two ways to setup and use this project.
 1) Using GIT CLONE:
+   
+   **Follow the below steps if you only want to clone the project and start prediction directly**
+
    - Open the terminal and type: https://github.com/Aman-Vishwakarma1729/Body_Mass_Index_from_Face_Images .
-   - Type **pip install requirements.txt** .
+   - Type **pip install -r requirements.txt** .
    - Type **python application.py** .
-   - Go to the recenly generate log file and follow the link in that log file.
+   - Go to the recenly generate log file and follow the localhost link in that log file.
+   - **NOTE:** First prediction takes times. Beacuase it takes time gender_predictior module to get downloaded which is roughly 537MB in size.
+   
+   **Follow the below steps if you want to clone the project and start from scratch i.e. from data scrapping to training and saving model and making prediction**
+
+   - Open the terminal and type: https://github.com/Aman-Vishwakarma1729/Body_Mass_Index_from_Face_Images .
+   - Type **pip install -r requirements.txt** .
+   - Type **python hg_to_w_dataingestion_transformation_model_trainer_pipeline.py** .
+   - Type **python image_data_scrapper_gender_prediction_facial_feature_extractor_pipeline.py** .
+   - Type **python getting_final_data_pipeline.py** .
+   - Type **python bmi_dataingestion_transformation_modeltrainer_pipeline.py** .
+   - Type **python application.py** .
+   - Go to the recenly generate log file and follow the localhost link in that log file.
+   **NOTE:** First prediction takes times. Beacuase it takes time gender_predictior module to get downloaded which is roughly 537MB in size.
 
 2) Using Docker Image.
-    - We have created a docker image of this project which is uploaded on docker hub.
+   
+   **Follow the below steps to use docker container**
+
+   - Type **docker pull amanvishwakarma1729/bmi_prediction_from_facial_images:latest**
+   - Type **docekr run -p 5000:5000 amanvishwakarma1729/bmi_prediction_using_facial_images:latest**
+   **NOTE:** 
+   - Till now this only works with upload image option.. will update it to work with capture Image method.
+   - First prediction takes times. Beacuase it takes time gender_predictior module to get downloaded which is roughly 537MB in size.
+
 
 ## Database
 --------------
 The final BMI dataset is uploaded on **MongoDB**
+
+1) To work with **Own** MongoDB database create own mongodb server and get its URI.
+
+2) create **.env** file on current working directory.
+
+3) And paste:
+   # Unix:
+   export MONGODB_URI= "<Your MongoDB server URI>"
+
+4) Run the file [MongoDB.py](MongoDB.py)
 
 ## About Deployment
 --------------

@@ -16,7 +16,7 @@ colorama==0.4.6
 comm==0.2.0
 contourpy==1.1.1
 cycler==0.12.1
-# dataclasses
+dataclasses
 debugpy==1.8.0
 decorator==5.1.1
 deepface==0.0.81
@@ -43,7 +43,7 @@ greenlet==3.0.2
 grpcio==1.59.2
 gunicorn==21.2.0
 h11==0.14.0
-# h5py==3.10.0
+h5py==3.10.0
 idna==3.6
 imbalanced-learn==0.11.0
 imblearn==0.0
@@ -98,6 +98,7 @@ pyasn1==0.5.0
 pyasn1-modules==0.3.0
 pycparser==2.21
 Pygments==2.17.2
+pymongo==4.6.2
 PyMySQL==1.1.0
 pyparsing==3.1.1
 PyPrind==2.11.3
@@ -105,8 +106,9 @@ PySocks==1.7.1
 pysut==1.1
 pytest==7.4.3
 python-dateutil==2.8.2
+python-dotenv == 0.21.0
 pytz==2023.3.post1
-# pywin32
+pywin32
 pywin32-ctypes==0.2.2
 pyzmq==25.1.1
 readme-renderer==42.0
@@ -133,7 +135,7 @@ tensorboard==2.13.0
 tensorboard-data-server==0.7.2
 tensorflow==2.13.0
 tensorflow-estimator==2.13.0
-# tensorflow-intel>=2.13.0
+tensorflow-intel>=2.13.0
 tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.3.0
 threadpoolctl==3.2.0
@@ -147,7 +149,8 @@ twine==4.0.2
 typing_extensions==4.5.0
 tzdata==2023.3
 urllib3==2.1.0
-wcwidth==0.2.9
+wcwidth==0.2.
+watchdog==4.0.0
 Werkzeug==3.0.1
 wrapt==1.16.0
 wsproto==1.2.0

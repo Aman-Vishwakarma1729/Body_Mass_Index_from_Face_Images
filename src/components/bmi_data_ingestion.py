@@ -69,7 +69,7 @@ class BMI_DataIngestion:
             train_set.to_csv(self.bmi_dataingestion_config.bmi_train_data_path,index=False,header=True)
             test_set.to_csv(self.bmi_dataingestion_config.bmi_test_data_path,index=False,header=True)
 
-            logging.info('Data ingestion copleted for predicton of bmi from facial features')
+            logging.info('Data ingestion completed for predicton of bmi from facial features')
 
             return(
                 self.bmi_dataingestion_config.bmi_train_data_path,
